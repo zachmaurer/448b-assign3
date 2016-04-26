@@ -4,42 +4,75 @@
 <head>
     <meta charset="utf-8">
     <title>D3 Test</title>
-    <script type="text/javascript" src="d3.v3.js"></script>
-    <script type="text/javascript" src="SFMap.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-eM4xjHsVZ25wKuIG1PxCQkEs7WTMkeg&callback=initMap"
-    async defer></script>
-
+    <link rel='stylesheet' href='materialize/css/materialize.css'>
+    <link rel='stylesheet' href='materialize/css/main.css'>
 </head>
-<style type="text/css">
-
-html, body, #map {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-.incidents, .incidents svg {
-  position: absolute;
-}
-
-.incidents svg {
-  width: 60px;
-  height: 20px;
-  padding-right: 100px;
-  font: 10px sans-serif;
-}
-
-.incidents circle {
-  fill: brown;
-  stroke-width: 1.5px;
-}
-</style>
 
 <body>
-
-    <div id="map"></div>
-
+    <div class="navbar-fixed">
+        <nav>
+            <div class="nav-wrapper">
+                <a href="#" class="brand-logo center">SF Crime</a>
+            </div>
+        </nav>
+    </div>
+    <div class="row fill">
+        <div class="col s9 fill">
+            <!-- Teal page content  -->
+            <div id="map"></div>
+        </div>
+        <div class="col s3 fill">
+            <!-- Grey navigation panel -->
+            <form action="#">
+                <p class='day-checkbox'>
+                    <div class='day-checkbox'>
+                        <input type="checkbox" id="Monday" />
+                        <label for="Monday"></label>
+                    </div>
+                    <div class="day-label">M</div>
+                </p>
+                <p class='day-checkbox'>
+                    <div class='day-checkbox'>
+                        <input type="checkbox" id="Tuesday" />
+                        <label for="Tuesday"></label>
+                    </div>
+                    <div class="day-label">T</div>
+                </p>
+                <p class='day-checkbox'>
+                    <div class='day-checkbox'>
+                        <input type="checkbox" id="Wednesday" />
+                        <label for="Wednesday"></label>
+                    </div>
+                    <div class="day-label">W</div>
+                </p>
+                <p class='day-checkbox'>
+                    <input type="checkbox" id="Thursday" />
+                    <label for="Thursday"></label>
+                    <div class="day-label">T</div>
+                </p>
+                <p class='day-checkbox'>
+                    <input type="checkbox" id="Friday" />
+                    <label for="Friday"></label>
+                    <div class="day-label">F</div>
+                </p>
+                <p class='day-checkbox'>
+                    <input type="checkbox" id="Saturday" />
+                    <label for="Saturday"></label>
+                    <div class="day-label">S</div>
+                </p>
+                <p class='day-checkbox'>
+                    <input type="checkbox" id="Sunday" />
+                    <label for="Sunday"></label>
+                    <div class="day-label">S</div>
+                </p>
+            </form>
+        </div>
+    </div>
+    <script type='text/javascript' src='jquery-1.12.3.min.js'></script>
+    <script type='text/javascript' src='materialize/js/materialize.js'></script>
+    <script type="text/javascript" src="d3.v3.js"></script>
+    <script type="text/javascript" src="SFMap.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-eM4xjHsVZ25wKuIG1PxCQkEs7WTMkeg&callback=initMap" async defer></script>
 </body>
 
 </html>
