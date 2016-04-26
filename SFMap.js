@@ -14,6 +14,82 @@ function initMap() {
         valid_days = [true, true, true, true, true, true, true],
         day_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
+//--------------- constructing POIs
+
+var POI_LATLNG = [{
+      lat: 37.76487,
+      lng: -122.41948
+    },
+    { lat: 37.76000,
+      lng: -122.40
+
+            }];
+
+var POI1 = new google.maps.Circle({
+      strokeColor: '#FF0000',
+      strokeOpacity: 0.8,
+      strokeWeight: 0.5,
+      fillColor: '#FF0000',
+      fillOpacity: 0.35,
+      map: map,
+      center: POI_LATLNG[0],
+      radius: 1000,
+      editable: true,
+      draggable: true,
+    });
+
+var POI2 = new google.maps.Circle({
+      strokeColor: '#28E3FC',
+      strokeOpacity: 0.8,
+      strokeWeight: 0.5,
+      fillColor: '#28E3FC',
+      fillOpacity: 0.35,
+      map: map,
+      center: POI_LATLNG[1],
+      radius: 1000,
+      editable: true,
+      draggable: true,
+    });
+
+google.maps.event.addListener(POI1, 'radius_changed', function() { 
+    d3.select('.incidents').selectAll("svg")
+            .data(d3.entries(globalData['data']))
+            .each(filterIntersection); // update existing markers
+
+});
+
+google.maps.event.addListener(POI2, 'radius_changed', function() { 
+    d3.select('.incidents').selectAll("svg")
+            .data(d3.entries(globalData['data']))
+            .each(filterIntersection); // update existing markers
+
+});
+
+
+google.maps.event.addListener(POI1, 'dragend', function() { 
+    d3.select('.incidents').selectAll("svg")
+            .data(d3.entries(globalData['data']))
+            .each(filterIntersection); // update existing markers
+
+});
+
+google.maps.event.addListener(POI2, 'dragend', function() { 
+    d3.select('.incidents').selectAll("svg")
+            .data(d3.entries(globalData['data']))
+            .each(filterIntersection); // update existing markers
+});
+
+
+var filterIntersection = function(d) {
+    var _dLatLng = new google.maps.LatLng(d.value.Location[1], d.value.Location[0]);
+    var distToPOI1 = google.maps.geometry.spherical.computeDistanceBetween(POI1.center, _dLatLng);
+    var distToPOI2 = google.maps.geometry.spherical.computeDistanceBetween(POI2.center, _dLatLng);
+    if (distToPOI1 < POI1.radius && distToPOI2 < POI2.radius) {
+        d3.select(this).style('visibility', 'visible');
+    } else {
+        d3.select(this).style('visibility', 'hidden');
+    }
+}
 
 
 //--------------- painting the crime sites
@@ -54,6 +130,8 @@ function initMap() {
         }
     };
    
+
+
     $("input[type='checkbox']").change(function() {
 
         $("input[type='checkbox']").each(function(index, element) {
