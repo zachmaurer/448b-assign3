@@ -92,6 +92,168 @@ var filterIntersection = function(d) {
 }
 
 
+
+
+//--------------- initializing searchboxes
+
+    //----- custom markers
+    var pinColor1 = "FF0000";
+    var pinColor2 = "28E3FC";
+
+    var pinImage1 = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor1,
+        new google.maps.Size(21, 34),
+        new google.maps.Point(0,0),
+        new google.maps.Point(10, 34));
+    var pinImage2 = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor2,
+        new google.maps.Size(21, 34),
+        new google.maps.Point(0,0),
+        new google.maps.Point(10, 34));
+    var pinShadow = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_shadow",
+        new google.maps.Size(40, 37),
+        new google.maps.Point(0, 0),
+        new google.maps.Point(12, 35));
+
+
+
+    // Create the search box and link it to the UI element.
+    var poi1Input = document.getElementById('pac-input1');
+    var poi2Input = document.getElementById('pac-input2');
+
+    var searchBox1 = new google.maps.places.SearchBox(poi1Input);
+    //map.controls[google.maps.ControlPosition.TOP_LEFT].push(poi1Input);
+    
+    var searchBox2 = new google.maps.places.SearchBox(poi2Input);
+    //map.controls[google.maps.ControlPosition.TOP_LEFT].push(poi2Input);
+
+    // Bias the SearchBox results towards current map's viewport.
+    map.addListener('bounds_changed', function() {
+      searchBox1.setBounds(map.getBounds());
+      searchBox2.setBounds(map.getBounds());
+    });
+
+    var markers1 = [];
+    var markers2 = [];
+    // Listen for the event fired when the user selects a prediction and retrieve
+    // more details for that place.
+    
+    searchBox1.addListener('places_changed', function() {
+      var places = this.getPlaces();
+
+      if (places.length == 0) {
+        return;
+      }
+
+      // Clear out the old markers.
+      markers1.forEach(function(marker) {
+        marker.setMap(null);
+      });
+      markers1 = [];
+
+      // For each place, get the icon, name and location.
+      var bounds = new google.maps.LatLngBounds();
+      
+      if (places.length == 1) {
+        POI1.setCenter(places[0].geometry.location); 
+        d3.select('.incidents').selectAll("svg")
+            .data(d3.entries(globalData['data']))
+            .each(filterIntersection); // update existing markers 
+      } else {
+        places.forEach(function(place) {
+            var icon = {
+              url: place.icon,
+              size: new google.maps.Size(71, 71),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(25, 25)
+            };
+
+            // Create a marker for each place.
+            markers1.push(new google.maps.Marker({
+              map: map,
+              icon: pinImage1,
+              title: place.name,
+              position: place.geometry.location
+            }));
+        });
+      }
+    });
+  
+    
+    searchBox2.addListener('places_changed', function() {
+      var places = this.getPlaces();
+
+      if (places.length == 0) {
+        return;
+      }
+
+      // Clear out the old markers.
+      markers2.forEach(function(marker) {
+        marker.setMap(null);
+      });
+      markers2 = [];
+
+      // For each place, get the icon, name and location.
+      var bounds = new google.maps.LatLngBounds();
+      
+      if (places.length == 1) {
+        POI2.setCenter(places[0].geometry.location); 
+        d3.select('.incidents').selectAll("svg")
+            .data(d3.entries(globalData['data']))
+            .each(filterIntersection); // update existing markers 
+      } else {
+        places.forEach(function(place) {
+            var icon = {
+              url: place.icon,
+              size: new google.maps.Size(71, 71),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(25, 25)
+            };
+
+            // Create a marker for each place.
+            var m = new google.maps.Marker({
+              map: map,
+              icon: pinImage2,
+              title: place.name,
+              position: place.geometry.location
+            });
+
+            m.addListener('click',function(){
+                POI2.setCenter(this.position); 
+                d3.select('.incidents').selectAll("svg")
+                    .data(d3.entries(globalData['data']))
+                    .each(filterIntersection); // update existing markers 
+                markers2.forEach(function(marker) {
+                    marker.setMap(null);
+                });
+                markers2 = [];
+            });
+
+            markers2.push(m);
+
+            //There is a scope issue here where markers2 gets turned into an array of "nb"
+            // markers2.push(new google.maps.Marker({
+            //   map: map,
+            //   icon: pinImage2,
+            //   title: place.name,
+            //   position: place.geometry.location
+            // }).addListener('click',function(){
+            //     POI2.setCenter(this.position); 
+            //     d3.select('.incidents').selectAll("svg")
+            //         .data(d3.entries(globalData['data']))
+            //         .each(filterIntersection); // update existing markers 
+            //     console.log(markers2);
+            //     markers2.forEach(function(marker) {
+            //         marker.setMap(null);
+            //         console.log("setting markers to bull");
+            //     });
+            //     markers2 = [];
+            // }));
+        });
+      }
+    });
+
+
 //--------------- painting the crime sites
     var updateMarkers = function(data) {
 
