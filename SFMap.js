@@ -49,14 +49,14 @@ function initMap() {
         google.maps.event.addListener(POI, 'radius_changed', function() {
             d3.select('.incidents').selectAll("svg")
                 .data(d3.entries(globalData['data']))
-                .each(filterIntersection); // update existing markers
+                .each(macDaddyFilter); // update existing markers
 
         });
 
         google.maps.event.addListener(POI, 'dragend', function() {
             d3.select('.incidents').selectAll("svg")
                 .data(d3.entries(globalData['data']))
-                .each(filterIntersection); // update existing markers
+                .each(macDaddyFilter); // update existing markers
 
         });
 
@@ -102,7 +102,7 @@ function initMap() {
                     POI.setCenter(places[0].geometry.location);
                     d3.select('.incidents').selectAll("svg")
                         .data(d3.entries(globalData['data']))
-                        .each(filterIntersection); // update existing markers 
+                        .each(macDaddyFilter); // update existing markers 
                 } else {
                     places.forEach(function(place) {
                         var icon = {
@@ -125,7 +125,7 @@ function initMap() {
                             POI.setCenter(place.geometry.location);
                             d3.select('.incidents').selectAll("svg")
                                 .data(d3.entries(globalData['data']))
-                                .each(filterIntersection); // update existing markers 
+                                .each(macDaddyFilter); // update existing markers 
                             markers.forEach(function(old_marker) {
                                 old_marker.setMap(null);
                             });
@@ -160,18 +160,42 @@ function initMap() {
 
 
 
+
+
+// ------ FILTER FUNCTIONALITY ----------
+
     var filterIntersection = function(d) {
             var _dLatLng = new google.maps.LatLng(d.value.Location[1], d.value.Location[0]);
             var distToPOI1 = google.maps.geometry.spherical.computeDistanceBetween(POI1.center, _dLatLng);
             var distToPOI2 = google.maps.geometry.spherical.computeDistanceBetween(POI2.center, _dLatLng);
             if (distToPOI1 < POI1.radius && distToPOI2 < POI2.radius) {
-                d3.select(this).style('visibility', 'visible');
+                return true;
+                // d3.select(this).style('visibility', 'visible');
             } else {
-                d3.select(this).style('visibility', 'hidden');
+                return false;
+                // d3.select(this).style('visibility', 'hidden');
             }
         }
 
+    var filterDays = function(d) {
+        var index = day_names.indexOf(d.value.DayOfWeek),
+            is_valid = valid_days[index];
+        if (is_valid) {
+            return true;
+            // d3.select(this).style('visibility', 'visible');
+        } else {
+            return false;
+            // d3.select(this).style('visibility', 'hidden');
+        }
+    };
 
+     var macDaddyFilter = function(d) {
+      if (filterIntersection(d) && filterDays(d)) {
+        d3.select(this).style('visibility', 'visible');
+      } else {
+        d3.select(this).style('visibility', 'hidden');
+      }
+    };
 
 
         //--------------- painting the crime sites
@@ -202,15 +226,7 @@ function initMap() {
 
 
     //------------- day checkbox functionality
-    var filterDays = function(d) {
-        var index = day_names.indexOf(d.value.DayOfWeek),
-            is_valid = valid_days[index];
-        if (is_valid) {
-            d3.select(this).style('visibility', 'visible');
-        } else {
-            d3.select(this).style('visibility', 'hidden');
-        }
-    };
+
 
     $("input[type='checkbox']").change(function() {
 
@@ -222,7 +238,7 @@ function initMap() {
 
         d3.select('.incidents').selectAll("svg")
             .data(d3.entries(globalData['data']))
-            .each(filterDays); // update existing markers
+            .each(macDaddyFilter); // update existing markers
     });
 
 
