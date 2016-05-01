@@ -6,6 +6,7 @@
     <title>D3 Test</title>
     <link rel='stylesheet' href='materialize/css/materialize.css'>
     <link rel='stylesheet' href='materialize/css/main.css'>
+    <link rel='stylesheet' href='pickadate/themes/classic.time.css'>
 </head>
 
 <body>
@@ -32,6 +33,20 @@
                 <p>
                     <div>
                         <input id="pac-input2" class="controls searchbox" type="text" placeholder="Place 2">
+                    </div>
+                </p>
+                
+
+                <p>
+                    <div>
+                        <input id="StartTime" type="text" placeholder="00:00" value="00:00">
+                        <label for="StartTime"></label>
+                    </div>
+                </p>
+                 <p>
+                    <div>
+                        <input id="EndTime" type="text" placeholder="24:00" value="24:00">
+                        <label for="EndTime"></label>
                     </div>
                 </p>
                
@@ -81,6 +96,8 @@
     </div>
     <script type='text/javascript' src='jquery-1.12.3.min.js'></script>
     <script type='text/javascript' src='materialize/js/materialize.js'></script>
+    <script type='text/javascript' src='pickadate/compressed/picker.js'></script>
+    <script type='text/javascript' src='pickadate/compressed/picker.time.js'></script>
     <script type="text/javascript" src="d3.v3.js"></script>
     <script type="text/javascript" src="SFMap.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-eM4xjHsVZ25wKuIG1PxCQkEs7WTMkeg&callback=initMap&libraries=places" async defer>

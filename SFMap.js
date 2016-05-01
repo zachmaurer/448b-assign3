@@ -21,6 +21,14 @@ function initMap() {
 
     // ------ initializers ----------------
 
+    var START_TIME = new Date(0);
+    var END_TIME = new Date(0);
+    START_TIME.setHours(0);
+    START_TIME.setMinutes(0);
+    END_TIME.setHours(24);
+    END_TIME.setMinutes(0);
+    var TIME_RANGE = [START_TIME, END_TIME];
+
 
     //------------ initializing the map
     var map = new google.maps.Map(d3.select("#map").node(), {
@@ -189,8 +197,39 @@ function initMap() {
         }
     };
 
+
+    var filterTime = function(d) {
+        var time = new Date();
+        var timeStr = d.value.Time.split(":");
+        time.setHours(timeStr[0]);
+        time.setMinutes(timeStr[1]);
+        time.setDate(0);
+        
+        START_TIME.setDate(0);
+        END_TIME.setDate(0);
+
+        var wrapTime = false;
+        console.log(START_TIME);
+        console.log(END_TIME);
+        if (START_TIME.getTime() <= END_TIME.getTime()) {
+            console.log("not wrapped");
+            wrapped = false;
+        } else {
+            console.log("wrapped");
+            wrapped = true;
+        }
+        if (time.getTime() >= START_TIME.getTime() && time.getTime() <= END_TIME.getTime()) {
+            //console.log("Included: time: "+time);
+            return !wrapped;
+        } else {
+            //console.log("Excluded: time: "+time);
+            return !wrapped;
+        }
+    };
+
+
      var macDaddyFilter = function(d) {
-      if (filterIntersection(d) && filterDays(d)) {
+      if (filterIntersection(d) && filterDays(d) && filterTime(d)) {
         d3.select(this).style('visibility', 'visible');
       } else {
         d3.select(this).style('visibility', 'hidden');
@@ -242,7 +281,23 @@ function initMap() {
     });
 
 
+    //-------------- time selector functionality
 
+
+    $("#StartTime, #EndTime").change(function() {
+        $("#StartTime, #EndTime").each(function(index, element) {
+            var timeStr = element.value.split(":");
+            TIME_RANGE[index].setHours(timeStr[0]);
+            TIME_RANGE[index].setMinutes(timeStr[1]);
+        });
+        
+        //console.log(TIME_RANGE[0]);
+        //console.log(TIME_RANGE[1]);
+        
+        d3.select('.incidents').selectAll("svg")
+            .data(d3.entries(globalData['data']))
+            .each(macDaddyFilter); // update existing markers
+    });
 
 
     // lat, long, radius
