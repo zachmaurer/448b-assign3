@@ -170,10 +170,8 @@ function initMap() {
             var distToPOI2 = google.maps.geometry.spherical.computeDistanceBetween(POI2.center, _dLatLng);
             if (distToPOI1 < POI1.radius && distToPOI2 < POI2.radius) {
                 return true;
-                // d3.select(this).style('visibility', 'visible');
             } else {
                 return false;
-                // d3.select(this).style('visibility', 'hidden');
             }
         }
 
@@ -182,10 +180,8 @@ function initMap() {
             is_valid = valid_days[index];
         if (is_valid) {
             return true;
-            // d3.select(this).style('visibility', 'visible');
         } else {
             return false;
-            // d3.select(this).style('visibility', 'hidden');
         }
     };
 
