@@ -18,18 +18,6 @@ function initMap() {
         searchBoxes = [];
 
 
-
-    // ------ initializers ----------------
-
-    var START_TIME = new Date(0);
-    var END_TIME = new Date(0);
-    START_TIME.setHours(0);
-    START_TIME.setMinutes(0);
-    END_TIME.setHours(24);
-    END_TIME.setMinutes(0);
-    var TIME_RANGE = [START_TIME, END_TIME];
-
-
     //------------ initializing the map
     var map = new google.maps.Map(d3.select("#map").node(), {
         zoom: 13,
@@ -198,32 +186,48 @@ function initMap() {
     };
 
 
+    //TODO: fix time filter
+    // At the moment, only accepts strings in the form "HH:MM"
+    var START_TIME = new Date(0);
+    var END_TIME = new Date(0);
+    START_TIME.setHours(0);
+    START_TIME.setMinutes(0);
+    END_TIME.setHours(24);
+    END_TIME.setMinutes(0);
+    var TIME_RANGE = [START_TIME, END_TIME];
+
+
     var filterTime = function(d) {
+
+        //Create a new date/time from the object
         var time = new Date();
         var timeStr = d.value.Time.split(":");
-        time.setHours(timeStr[0]);
-        time.setMinutes(timeStr[1]);
-        time.setDate(0);
-        
-        START_TIME.setDate(0);
-        END_TIME.setDate(0);
+        time.setHours(timeStr[0], timeStr[1]);
 
-        var wrapTime = false;
-        console.log(START_TIME);
-        console.log(END_TIME);
-        if (START_TIME.getTime() <= END_TIME.getTime()) {
-            console.log("not wrapped");
-            wrapped = false;
-        } else {
-            console.log("wrapped");
-            wrapped = true;
-        }
-        if (time.getTime() >= START_TIME.getTime() && time.getTime() <= END_TIME.getTime()) {
+        //Resetting the calendar day, in order to do a time comparison only.
+        time.setDate(0);    
+        TIME_RANGE[0].setDate(0);
+        TIME_RANGE[1].setDate(0);
+        
+        console.log(TIME_RANGE[0]);
+        console.log(TIME_RANGE[1]);
+
+        //Tried to implement functionality where user can input START:7am -> END:9am (duration 2 hrs) 
+        //and also the inverse START:9am -> END:7am (duration 22hrs) however, I had to stop short here to study.
+        // var wrapTime = false;
+        // if (START_TIME.getTime() <= END_TIME.getTime()) {
+        //     console.log("not wrapped");
+        //     wrapped = false;
+        // } else {
+        //     console.log("wrapped");
+        //     wrapped = true;
+        // }
+        if ((time.getTime() >= TIME_RANGE[0].getTime()) && (time.getTime() <= TIME_RANGE[1].getTime())) {
             //console.log("Included: time: "+time);
-            return !wrapped;
+            return true;
         } else {
             //console.log("Excluded: time: "+time);
-            return !wrapped;
+            return false;
         }
     };
 
@@ -283,12 +287,11 @@ function initMap() {
 
     //-------------- time selector functionality
 
-
+    //TODO: fix time filter
     $("#StartTime, #EndTime").change(function() {
         $("#StartTime, #EndTime").each(function(index, element) {
             var timeStr = element.value.split(":");
-            TIME_RANGE[index].setHours(timeStr[0]);
-            TIME_RANGE[index].setMinutes(timeStr[1]);
+            TIME_RANGE[index].setHours(timeStr[0], timeStr[1]);
         });
         
         //console.log(TIME_RANGE[0]);
