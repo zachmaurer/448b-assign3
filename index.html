@@ -3,9 +3,13 @@
 
 <head>
     <meta charset="utf-8">
-    <title>D3 Test</title>
+    <title>Explore Crime SF</title>
+    <!-- <link rel="stylesheet" href="nouislider.css"> -->
     <link rel='stylesheet' href='materialize/css/materialize.css'>
     <link rel='stylesheet' href='materialize/css/main.css'>
+    <link rel='stylesheet' href='pickadate/themes/classic.time.css'>
+    <link rel="stylesheet" href="bower_components/seiyria-bootstrap-slider/src/bootstrap-slider.css">
+    <link rel="stylesheet" href="bower_components/seiyria-bootstrap-slider/src/bootstrap.min.css">
 </head>
 
 <body>
@@ -34,7 +38,22 @@
                         <input id="pac-input2" class="controls searchbox" type="text" placeholder="Place 2">
                     </div>
                 </p>
-               
+                <div class="selected-time"> 0 to 24</div>
+                <p>
+                    <div id="time-slider"></div>
+                </p>
+                <!-- Switch -->
+                <div class="switch">
+                    <label>
+                        Middle
+                        <input type="checkbox">
+                        <span class="lever"></span> 
+                        Outside
+                    </label>
+                </div>
+
+
+
                 <p class='day-checkbox'>
                     <div class='day-checkbox'>
                         <input type="checkbox" id="Monday" />
@@ -81,10 +100,18 @@
     </div>
     <script type='text/javascript' src='jquery-1.12.3.min.js'></script>
     <script type='text/javascript' src='materialize/js/materialize.js'></script>
+    <script type='text/javascript' src='pickadate/compressed/picker.js'></script>
+    <script type='text/javascript' src='pickadate/compressed/picker.time.js'></script>
     <script type="text/javascript" src="d3.v3.js"></script>
     <script type="text/javascript" src="SFMap.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-eM4xjHsVZ25wKuIG1PxCQkEs7WTMkeg&callback=initMap&libraries=places" async defer>
     </script>
+    <script type="text/javascript" src='wnumb-1.0.2/wNumb.js'></script>
+    <script type="text/javascript" src='bower_components/seiyria-bootstrap-slider/src/js/bootstrap-slider.js'>
+    </script>
+    <!-- <script type="text/javascript" src='nouislider.js'></script> -->
+    <!-- <script type="text/javascript" src='slider.js'></script> -->
+    <!-- <script type="text/javascript" src="noUiSlider.8.5.1/nouislider.js"></script> -->
 </body>
 
 </html>

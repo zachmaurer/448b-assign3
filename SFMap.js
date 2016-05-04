@@ -15,11 +15,8 @@ function initMap() {
             lat: 37.76000,
             lng: -122.40
         }],
-        searchBoxes = [];
-
-
-
-    // ------ initializers ----------------
+        searchBoxes = [],
+        time_range = [0, 24];
 
 
     //------------ initializing the map
@@ -151,54 +148,66 @@ function initMap() {
     createSearchBoxes();
 
 
-    // Bias the SearchBox results towards current map's viewport.
-    map.addListener('bounds_changed', function() {
-        for (index in searchBoxes) {
-            searchBoxes[index].setBounds(map.getBounds());
-        }
+  // // --------- creating time slider -----------
+    var slider = new Slider("#time-slider", {
+        id: "slider12c",
+        min: 0,
+        max: 24,
+        range: true,
+        value: [0, 24]
     });
 
 
 
 
 
-// ------ FILTER FUNCTIONALITY ----------
+    // ------ FILTER FUNCTIONALITY ----------
 
     var filterIntersection = function(d) {
-            var _dLatLng = new google.maps.LatLng(d.value.Location[1], d.value.Location[0]);
-            var distToPOI1 = google.maps.geometry.spherical.computeDistanceBetween(POI1.center, _dLatLng);
-            var distToPOI2 = google.maps.geometry.spherical.computeDistanceBetween(POI2.center, _dLatLng);
-            if (distToPOI1 < POI1.radius && distToPOI2 < POI2.radius) {
-                return true;
-                // d3.select(this).style('visibility', 'visible');
-            } else {
-                return false;
-                // d3.select(this).style('visibility', 'hidden');
-            }
+        var _dLatLng = new google.maps.LatLng(d.value.Location[1], d.value.Location[0]);
+        var distToPOI1 = google.maps.geometry.spherical.computeDistanceBetween(POI1.center, _dLatLng);
+        var distToPOI2 = google.maps.geometry.spherical.computeDistanceBetween(POI2.center, _dLatLng);
+        if (distToPOI1 < POI1.radius && distToPOI2 < POI2.radius) {
+            return true;
+        } else {
+            return false;
         }
+    }
 
     var filterDays = function(d) {
         var index = day_names.indexOf(d.value.DayOfWeek),
             is_valid = valid_days[index];
         if (is_valid) {
             return true;
-            // d3.select(this).style('visibility', 'visible');
         } else {
             return false;
-            // d3.select(this).style('visibility', 'hidden');
         }
     };
 
-     var macDaddyFilter = function(d) {
-      if (filterIntersection(d) && filterDays(d)) {
-        d3.select(this).style('visibility', 'visible');
-      } else {
-        d3.select(this).style('visibility', 'hidden');
-      }
+    var filterTime = function(d) {
+        var hour = parseInt(d.value.Time.split(":")[0]);
+        if (hour == time_range[0] || hour == time_range[1]) {return true};
+
+        if (hour > time_range[0] && hour < time_range[1]) {
+            return $('.switch input')[0].checked ? false : true;
+        } else {
+            return $('.switch input')[0].checked ? true : false;
+        }
+
     };
 
 
-        //--------------- painting the crime sites
+    var macDaddyFilter = function(d) {
+        if (filterIntersection(d) && filterDays(d) && filterTime(d)) {
+            d3.select(this).style('visibility', 'visible');
+            // console.log(d)
+        } else {
+            d3.select(this).style('visibility', 'hidden');
+        }
+    };
+
+
+    //--------------- painting the crime sites
     var updateMarkers = function(data) {
 
         var marker = d3.select('.incidents').selectAll("svg")
@@ -224,6 +233,21 @@ function initMap() {
     };
 
 
+    var applyFilters = function() {
+        d3.select('.incidents').selectAll("svg")
+            .data(d3.entries(globalData['data']))
+            .each(macDaddyFilter); // update existing markers
+    };
+
+
+    var showTime = function() {
+        if ($('.switch input')[0].checked) {
+            $('.selected-time').text(time_range[1] + ' to ' + time_range[0] + '** wraps **');
+        } else {
+            $('.selected-time').text(time_range[0] + ' to ' + time_range[1]);
+        }
+
+    };
 
     //------------- day checkbox functionality
 
@@ -232,17 +256,30 @@ function initMap() {
 
         $("input[type='checkbox']").each(function(index, element) {
             valid_days[index] = element.checked;
-            // console.log(element.id)
-            // console.log(element.checked)
         });
 
-        d3.select('.incidents').selectAll("svg")
-            .data(d3.entries(globalData['data']))
-            .each(macDaddyFilter); // update existing markers
+        applyFilters();
     });
 
 
+    $('.switch input').change(function() {
+        if (this.checked) {
+            $('.slider-track-high').addClass('flipped');
+            $('.slider-track-low').addClass('flipped');
+            $('.slider-selection').addClass('flipped');
+        } else {
+            $('.slider-track-high').removeClass('flipped');
+            $('.slider-track-low').removeClass('flipped');
+            $('.slider-selection').removeClass('flipped');
+        }
+        showTime();
+    })
 
+    $("#time-slider").on("slide", function(slideEvt) {
+        time_range = slideEvt.value;
+        applyFilters();
+        showTime();
+    });
 
 
     // lat, long, radius
@@ -271,7 +308,12 @@ function initMap() {
 }
 
 
-
+    // Bias the SearchBox results towards current map's viewport.
+    map.addListener('bounds_changed', function() {
+        for (index in searchBoxes) {
+            searchBoxes[index].setBounds(map.getBounds());
+        }
+    });
 
 // ------------ makes checkboxes animated and fancy
 $(document).ready(function() {
