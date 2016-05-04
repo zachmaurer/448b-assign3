@@ -248,12 +248,13 @@ function initMap() {
 
     //------------ initializing the map
     var map = new google.maps.Map(d3.select("#map").node(), {
-        zoom: 13,
+        zoom: 12,
         center: new google.maps.LatLng(37.76487, -122.41948),
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         zoomControlOptions: {
             position: google.maps.ControlPosition.LEFT_TOP,
-        }
+        },
+        streetViewControl: false,
     });
 
     map.setOptions({styles: mapStyles});
@@ -507,7 +508,8 @@ function initMap() {
         showTime();
     })
 
-    $("#time-slider").on("slide", function(slideEvt) {
+    $("#time-slider").on("slideStop", function(slideEvt) {
+        //console.log(slideEvt);
         time_range = slideEvt.value;
         applyFilters();
         showTime();
