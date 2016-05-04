@@ -2,7 +2,7 @@ html,
 body,
 #map {
     width: 100%;
-    height: 100%;
+    height: 87%;
     margin: 0;
     padding: 0;
 }
@@ -10,6 +10,16 @@ body,
 .incidents,
 .incidents svg {
     position: absolute;
+}
+
+
+
+.wide {
+    width: 80%;
+}
+
+.nav-wrapper {
+    background-color: #2C302E !important;
 }
 
 .incidents svg {
@@ -28,9 +38,16 @@ body,
     height: 100%;
 }
 
+.inline {
+    display: inline-block !important;
+    float: left;
+}
+
 .day-checkbox {
     display: inline;
     width: 50px;
+    float: left;
+    margin-right: 5px;
 }
 
 .controls {
@@ -79,6 +96,24 @@ body,
     width: 345px;
 }
 
+.tall {
+    height: 300px;
+    max-width: 90%;
+    overflow: scroll;
+    border: solid;
+    border-color: gray;
+    border-radius: 5px;
+
+}
+
+.wide {
+    width: 95%;
+}
+
+.inactive {
+    background-color: grey;
+    opacity: 0.4;
+}
 
 /* SLIDER Classes*/
 

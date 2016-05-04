@@ -10,13 +10,15 @@
     <link rel='stylesheet' href='pickadate/themes/classic.time.css'>
     <link rel="stylesheet" href="bower_components/seiyria-bootstrap-slider/src/bootstrap-slider.css">
     <link rel="stylesheet" href="bower_components/seiyria-bootstrap-slider/src/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="map-icons-master/dist/css/map-icons.css">
+    <link rel="stylesheet" type="text/css" href="bower_components/chosen/chosen.css">
 </head>
 
 <body>
     <div class="navbar-fixed">
         <nav>
             <div class="nav-wrapper">
-                <a href="#" class="brand-logo center">SF Crime</a>
+                <h1 class="brand-logo center">Dynamic Crime Finder - San Francisco</h1>
             </div>
         </nav>
     </div>
@@ -24,91 +26,144 @@
         <div class="col s9 fill">
             <!-- Teal page content  -->
             <div id="map"></div>
+        
+                <div id="container" style="padding-left: 30px; float:left;">
+                    <h3> Days of Week Filter </h3>
+                    <div class='day-checkbox'>
+                        <input type="checkbox" id="Monday" checked/>
+                        <label for="Monday"></label>
+                        <div class="day-label">Mon.</div>
+                    </div>
+                     <div class='day-checkbox' style="float: left">                     
+                        <input type="checkbox" id="Tuesday" checked/>
+                        <label for="Tuesday"></label>
+                        <div class="day-label">Tues.</div>
+                    </div>
+                     <div class='day-checkbox' style="float: left">
+                        <input type="checkbox" id="Wednesday" checked/>
+                        <label for="Wednesday"></label>
+                        <div class="day-label">Wed.</div>
+                    </div>
+                     <div class='day-checkbox' style="float: left">
+                        <input type="checkbox" id="Thursday" checked/>
+                        <label for="Thursday"></label>
+                         <div class="day-label">Thurs.</div>
+                    </div>
+                     <div class='day-checkbox' style="float: left">
+                        <input type="checkbox" id="Friday" checked/>
+                        <label for="Friday"></label>
+                        <div class="day-label">Fri.</div>
+                    </div>
+                     <div class='day-checkbox' style="float: left">
+                        <input type="checkbox" id="Saturday" checked/>
+                        <label for="Saturday"></label>
+                        <div class="day-label">Sat.</div>
+                    </div>
+                     <div class='day-checkbox' style="float: none">
+                        <input type="checkbox" id="Sunday" checked/>
+                        <label for="Sunday"></label>
+                        <div class="day-label">Sun.</div>
+                    </div>
+                </div>
+                <div style="display:inline-block; margin-bottom: 50px; padding-left: 10px; float:left;">
+                    <h3> Time of Event </h3>
+                    <div class="center-align">
+                    <div class="selected-time">0h to 24h</div>
+                    <p>
+                        <div id="time-slider"></div>
+                    </p>
+                    <div class="switch">
+                        <label>
+                            Contained
+                            <input type="checkbox">
+                            <span class="lever"></span> 
+                            Wrapped
+                        </label>
+                    </div>
+                    </div>
+                </div>
+                <div style="display:inline-block; margin-bottom: 50px; padding-left: 20px;">
+                
+                <h3 id="total" style="color:red">Crimes Matched: 11322</h3>
+                    <h5 id="">Radius of Blue POI: <span id="radius1">1</span>km</h5>
+                    <h5 id="">Radius of Green POI: <span id="radius2">2</span>km</h5>
+
+                </div>
+
+
         </div>
         <div class="col s3 fill">
             <!-- Grey navigation panel -->
             <form action="#">
+                <h3> Location Selectors </h3>
                 <p>
-                    <div>
+                    <div>       
+                        <span class="map-icon map-icon-circle" style="color: #75ABBC"></span>
                         <input id="pac-input1" class="controls searchbox" type="text" placeholder="Place 1">
                     </div>
                 </p>
                 <p>
                     <div>
+                        <span class="map-icon map-icon-circle" style="color: #6AABA2"></span>     
                         <input id="pac-input2" class="controls searchbox" type="text" placeholder="Place 2">
                     </div>
                 </p>
-                <div class="selected-time"> 0 to 24</div>
-                <p>
-                    <div id="time-slider"></div>
-                </p>
-                <!-- Switch -->
-                <div class="switch">
-                    <label>
-                        Middle
-                        <input type="checkbox">
-                        <span class="lever"></span> 
-                        Outside
-                    </label>
-                </div>
+                
 
-
-
-                <p class='day-checkbox'>
-                    <div class='day-checkbox'>
-                        <input type="checkbox" id="Monday" />
-                        <label for="Monday"></label>
-                    </div>
-                    <div class="day-label">M</div>
-                </p>
-                <p class='day-checkbox'>
-                    <div class='day-checkbox'>
-                        <input type="checkbox" id="Tuesday" />
-                        <label for="Tuesday"></label>
-                    </div>
-                    <div class="day-label">T</div>
-                </p>
-                <p class='day-checkbox'>
-                    <div class='day-checkbox'>
-                        <input type="checkbox" id="Wednesday" />
-                        <label for="Wednesday"></label>
-                    </div>
-                    <div class="day-label">W</div>
-                </p>
-                <p class='day-checkbox'>
-                    <input type="checkbox" id="Thursday" />
-                    <label for="Thursday"></label>
-                    <div class="day-label">T</div>
-                </p>
-                <p class='day-checkbox'>
-                    <input type="checkbox" id="Friday" />
-                    <label for="Friday"></label>
-                    <div class="day-label">F</div>
-                </p>
-                <p class='day-checkbox'>
-                    <input type="checkbox" id="Saturday" />
-                    <label for="Saturday"></label>
-                    <div class="day-label">S</div>
-                </p>
-                <p class='day-checkbox'>
-                    <input type="checkbox" id="Sunday" />
-                    <label for="Sunday"></label>
-                    <div class="day-label">S</div>
-                </p>
+                <h3> Crime Type </h3>
+                <a id="clear">Clear selection</a>
+                  <div class="tall" id="crime-type">
+                    <div class="btn wide" value="ASSAULT">ASSAULT</div>
+                    <div class="btn wide"value="SEX OFFENSES, FORCIBLE">SEX OFFENSES, FORCIBLE</div>
+                    <div class="btn wide"value="DRUG/NARCOTIC">DRUG/NARCOTIC</div>
+                    <div class="btn wide"value="BURGLARY">BURGLARY</div>
+                    <div class="btn wide"value="KIDNAPPING">KIDNAPPING</div>
+                    <div class="btn wide"value="SEX OFFENSES, NON FORCIBLE">SEX OFFENSES, NON FORCIBLE</div>
+                    <div class="btn wide"value="ROBBERY">ROBBERY</div>
+                    <div class="btn wide"value="DRIVING UNDER THE INFLUENCE">DRIVING UNDER THE INFLUENCE</div>
+                    <div class="btn wide"value="VEHICLE THEFT">VEHICLE THEFT</div>
+                    <div class="btn wide"value="DISORDERLY CONDUCT">DISORDERLY CONDUCT</div>
+                    <div class="btn wide"value="SUSPICIOUS OCC">SUSPICIOUS OCC</div>
+                    <div class="btn wide"value="LARCENY/THEFT">LARCENY/THEFT</div>
+                    <div class="btn wide"value="SUICIDE">SUICIDE</div>
+                    <div class="btn wide"value="VANDALISM">VANDALISM</div>
+                    <div class="btn wide"value="WARRANTS">WARRANTS</div>
+                    <div class="btn wide"value="EMBEZZLEMENT">EMBEZZLEMENT</div>
+                    <div class="btn wide"value="MISSING PERSON">MISSING PERSON</div>
+                    <div class="btn wide"value="FORGERY/COUNTERFEITING">FORGERY/COUNTERFEITING</div>
+                    <div class="btn wide"value="LIQUOR LAWS">LIQUOR LAWS</div>
+                    <div class="btn wide"value="PROSTITUTION">PROSTITUTION</div>
+                    <div class="btn wide"value="RUNAWAY">RUNAWAY</div>
+                    <div class="btn wide"value="DRUNKENNESS">DRUNKENNESS</div>
+                    <div class="btn wide"value="OTHER OFFENSES">OTHER OFFENSES</div>
+                    <div class="btn wide"value="NON-CRIMINAL">NON-CRIMINAL</div>
+                    <div class="btn wide"value="TRESPASS">TRESPASS</div>
+                    <div class="btn wide"value="STOLEN PROPERTY">STOLEN PROPERTY</div>
+                    <div class="btn wide"value="FRAUD">FRAUD</div>
+                    <div class="btn wide"value="ARSON">ARSON</div>
+                    <div class="btn wide"value="WEAPON LAWS">WEAPON LAWS</div>
+                    <div class="btn wide"value="GAMBLING">GAMBLING</div>
+                    <div class="btn wide"value="EXTORTION">EXTORTION</div>
+                    <div class="btn wide"value="BRIBERY">BRIBERY</div>
+                    <div class="btn wide"value="SECONDARY CODES">SECONDARY CODES</div>
+                    <div class="btn wide"value="LOITERING">LOITERING</div>
+                    <div class="btn wide"value="FAMILY OFFENSES">FAMILY OFFENSES</div>
+                  </div>
             </form>
         </div>
     </div>
     <script type='text/javascript' src='jquery-1.12.3.min.js'></script>
+    <script type='text/javascript' src='bower_components/chosen/chosen.jquery.js'></script>
     <script type='text/javascript' src='materialize/js/materialize.js'></script>
-    <script type='text/javascript' src='pickadate/compressed/picker.js'></script>
-    <script type='text/javascript' src='pickadate/compressed/picker.time.js'></script>
+    <script type="text/javascript" src='wnumb-1.0.2/wNumb.js'></script>
+    <script type="text/javascript" src='bower_components/seiyria-bootstrap-slider/src/js/bootstrap-slider.js'>
+    </script>
     <script type="text/javascript" src="d3.v3.js"></script>
     <script type="text/javascript" src="SFMap.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-eM4xjHsVZ25wKuIG1PxCQkEs7WTMkeg&callback=initMap&libraries=places" async defer>
     </script>
-    <script type="text/javascript" src='wnumb-1.0.2/wNumb.js'></script>
-    <script type="text/javascript" src='bower_components/seiyria-bootstrap-slider/src/js/bootstrap-slider.js'>
-    </script>
+
+    
     <!-- <script type="text/javascript" src='nouislider.js'></script> -->
     <!-- <script type="text/javascript" src='slider.js'></script> -->
     <!-- <script type="text/javascript" src="noUiSlider.8.5.1/nouislider.js"></script> -->
