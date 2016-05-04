@@ -252,7 +252,8 @@ function initMap() {
        'SEX OFFENSES, NON FORCIBLE', 'SECONDARY CODES', 'LIQUOR LAWS',
        'LOITERING', 'FORGERY/COUNTERFEITING', 'EMBEZZLEMENT',
        'DRIVING UNDER THE INFLUENCE', 'GAMBLING', 'EXTORTION', 'RUNAWAY',
-       'SUICIDE', 'BRIBERY', 'FAMILY OFFENSES', 'PROSTITUTION'];
+       'SUICIDE', 'BRIBERY', 'FAMILY OFFENSES', 'PROSTITUTION'],
+       NUM_CRIMES = 11322;
 
 
     //------------ initializing the map
@@ -268,9 +269,14 @@ function initMap() {
 
     map.setOptions({styles: mapStyles});
 
+    // var setRadius() = function(id, radius) {
+    //     //$(id).text("")
+    // };
+
 
     // -------------- creating POI ------------
     var createPOI = function(color, index) {
+        var ids = ["#radius1", "#radius2"];
         var POI = new google.maps.Circle({
             strokeColor: color,
             strokeOpacity: 0.8,
@@ -286,16 +292,19 @@ function initMap() {
         });
 
         google.maps.event.addListener(POI, 'radius_changed', function() {
-            d3.select('.incidents').selectAll("svg")
-                .data(d3.entries(globalData['data']))
-                .each(macDaddyFilter); // update existing markers
+            // d3.select('.incidents').selectAll("svg")
+            //     .data(d3.entries(globalData['data']))
+            //     .each(macDaddyFilter); // update existing markers
+            $(ids[index]).text((POI.getRadius()/1000.0).toFixed(2));
+            applyFilters();
 
         });
 
         google.maps.event.addListener(POI, 'dragend', function() {
-            d3.select('.incidents').selectAll("svg")
-                .data(d3.entries(globalData['data']))
-                .each(macDaddyFilter); // update existing markers
+            // d3.select('.incidents').selectAll("svg")
+            //     .data(d3.entries(globalData['data']))
+            //     .each(macDaddyFilter); // update existing markers
+            applyFilters();
 
         });
 
@@ -339,9 +348,10 @@ function initMap() {
 
                 if (places.length == 1) {
                     POI.setCenter(places[0].geometry.location);
-                    d3.select('.incidents').selectAll("svg")
-                        .data(d3.entries(globalData['data']))
-                        .each(macDaddyFilter); // update existing markers 
+                    applyFilters();
+                    // d3.select('.incidents').selectAll("svg")
+                    //     .data(d3.entries(globalData['data']))
+                    //     .each(macDaddyFilter); // update existing markers 
                 } else {
                     places.forEach(function(place) {
                         var icon = {
@@ -362,9 +372,7 @@ function initMap() {
 
                         marker.addListener('click', function() {
                             POI.setCenter(place.geometry.location);
-                            d3.select('.incidents').selectAll("svg")
-                                .data(d3.entries(globalData['data']))
-                                .each(macDaddyFilter); // update existing markers 
+                            applyFilters();
                             markers.forEach(function(old_marker) {
                                 old_marker.setMap(null);
                             });
@@ -450,6 +458,7 @@ function initMap() {
     var macDaddyFilter = function(d) {
         if (filterIntersection(d) && filterDays(d) && filterTime(d) && filterCrimeType(d)) {
             d3.select(this).style('visibility', 'visible');
+            NUM_CRIMES++;
             // console.log(d)
         } else {
             d3.select(this).style('visibility', 'hidden');
@@ -484,9 +493,15 @@ function initMap() {
 
 
     var applyFilters = function() {
+        NUM_CRIMES = 0;
         d3.select('.incidents').selectAll("svg")
             .data(d3.entries(globalData['data']))
             .each(macDaddyFilter); // update existing markers
+        showTotal();
+    };
+
+    var showTotal = function () {
+        $('#total').text("Crimes Matched: "+NUM_CRIMES);  
     };
 
 
@@ -503,11 +518,9 @@ function initMap() {
 
 
     $("input[type='checkbox']").change(function() {
-
         $("input[type='checkbox']").each(function(index, element) {
             valid_days[index] = element.checked;
         });
-
         applyFilters();
     });
 
@@ -552,6 +565,14 @@ function initMap() {
     });
 
 
+    $('#clear').click(function() {
+        $('#crime-type').children().each(function(i) {
+            $(this).addClass("inactive");
+        });
+        CRIME_TYPES = [];
+        applyFilters();
+    });
+
 
     // lat, long, radius
     // var poi = [[null, null, null], [null, null, null]];
@@ -585,13 +606,6 @@ function initMap() {
     });
 }
 
-
-var clearSelection = function() {
-    $('#crime-type').children().each(function(i) {
-        $(this).addClass("inactive");
-    });
-    CRIME_TYPES = [];
-};
 
 // ------------ makes checkboxes animated and fancy
 $(document).ready(function() {

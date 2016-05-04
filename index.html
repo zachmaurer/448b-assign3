@@ -27,7 +27,7 @@
             <!-- Teal page content  -->
             <div id="map"></div>
         
-                <div id="container" style="padding-left: 100px; float:left;">
+                <div id="container" style="padding-left: 30px; float:left;">
                     <h3> Days of Week Filter </h3>
                     <div class='day-checkbox'>
                         <input type="checkbox" id="Monday" checked/>
@@ -65,7 +65,7 @@
                         <div class="day-label">Sun.</div>
                     </div>
                 </div>
-                <div style="display:inline-block; margin-bottom: 50px; padding-left: 30px;">
+                <div style="display:inline-block; margin-bottom: 50px; padding-left: 10px; float:left;">
                     <h3> Time of Event </h3>
                     <div class="center-align">
                     <div class="selected-time">0h to 24h</div>
@@ -81,6 +81,13 @@
                         </label>
                     </div>
                     </div>
+                </div>
+                <div style="display:inline-block; margin-bottom: 50px; padding-left: 20px;">
+                
+                <h3 id="total" style="color:red">Crimes Matched: 11322</h3>
+                    <h5 id="">Radius of Blue POI: <span id="radius1">1</span>km</h5>
+                    <h5 id="">Radius of Green POI: <span id="radius2">2</span>km</h5>
+
                 </div>
 
 
@@ -104,7 +111,7 @@
                 
 
                 <h3> Crime Type </h3>
-                <a onclick="clearSelection()">Clear selection</a>
+                <a id="clear">Clear selection</a>
                   <div class="tall" id="crime-type">
                     <div class="btn wide" value="ASSAULT">ASSAULT</div>
                     <div class="btn wide"value="SEX OFFENSES, FORCIBLE">SEX OFFENSES, FORCIBLE</div>
