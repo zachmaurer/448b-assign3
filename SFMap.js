@@ -1,19 +1,246 @@
 // Create the Google Map…
 function initMap() {
 
+    var mapStyles = [
+    {
+        "featureType": "all",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "saturation": 36
+            },
+            {
+                "color": "#000000"
+            },
+            {
+                "lightness": 40
+            }
+        ]
+    },
+    {
+        "featureType": "all",
+        "elementType": "labels.text.stroke",
+        "stylers": [
+            {
+                "visibility": "on"
+            },
+            {
+                "color": "#000000"
+            },
+            {
+                "lightness": 16
+            }
+        ]
+    },
+    {
+        "featureType": "all",
+        "elementType": "labels.icon",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "administrative",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "color": "#000000"
+            },
+            {
+                "lightness": 20
+            }
+        ]
+    },
+    {
+        "featureType": "administrative",
+        "elementType": "geometry.stroke",
+        "stylers": [
+            {
+                "color": "#000000"
+            },
+            {
+                "lightness": 17
+            },
+            {
+                "weight": 1.2
+            }
+        ]
+    },
+    {
+        "featureType": "landscape",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#000000"
+            },
+            {
+                "lightness": 20
+            }
+        ]
+    },
+    {
+        "featureType": "landscape.man_made",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "lightness": "5"
+            }
+        ]
+    },
+    {
+        "featureType": "landscape.natural.landcover",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "lightness": "0"
+            }
+        ]
+    },
+    {
+        "featureType": "landscape.natural.landcover",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "lightness": "0"
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#000000"
+            },
+            {
+                "lightness": 21
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "lightness": "20"
+            },
+            {
+                "visibility": "on"
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "geometry.stroke",
+        "stylers": [
+            {
+                "lightness": "0"
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "lightness": "10"
+            }
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "color": "#000000"
+            },
+            {
+                "lightness": 17
+            }
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "elementType": "geometry.stroke",
+        "stylers": [
+            {
+                "color": "#000000"
+            },
+            {
+                "lightness": 29
+            },
+            {
+                "weight": 0.2
+            }
+        ]
+    },
+    {
+        "featureType": "road.arterial",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#000000"
+            },
+            {
+                "lightness": 18
+            }
+        ]
+    },
+    {
+        "featureType": "road.local",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#000000"
+            },
+            {
+                "lightness": 16
+            }
+        ]
+    },
+    {
+        "featureType": "transit",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#000000"
+            },
+            {
+                "lightness": 19
+            }
+        ]
+    },
+    {
+        "featureType": "water",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#000000"
+            },
+            {
+                "lightness": 17
+            }
+        ]
+    }
+];
+
+
+
     var overlay = new google.maps.OverlayView(),
         globalData,
         padding = 10,
         valid_days = [true, true, true, true, true, true, true],
         day_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-        pinColor1 = "#FF0000",
-        pinColor2 = "#28E3FC",
+        pinColor1 = "#75ABBC",
+        pinColor2 = "#6AABA2",
         POI_LATLNG = [{
-            lat: 37.76487,
-            lng: -122.41948
+            lat: 37.7650,
+            lng: -122.45
         }, {
             lat: 37.76000,
-            lng: -122.40
+            lng: -122.42
         }],
         searchBoxes = [],
         time_range = [0, 24];
@@ -23,9 +250,13 @@ function initMap() {
     var map = new google.maps.Map(d3.select("#map").node(), {
         zoom: 13,
         center: new google.maps.LatLng(37.76487, -122.41948),
-        mapTypeId: google.maps.MapTypeId.TERRAIN
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        zoomControlOptions: {
+            position: google.maps.ControlPosition.LEFT_TOP,
+        }
     });
 
+    map.setOptions({styles: mapStyles});
 
 
     // -------------- creating POI ------------
@@ -33,14 +264,15 @@ function initMap() {
         var POI = new google.maps.Circle({
             strokeColor: color,
             strokeOpacity: 0.8,
-            strokeWeight: 0.5,
+            strokeWeight: 1,
             fillColor: color,
-            fillOpacity: 0.35,
+            fillOpacity: 0.05,
             map: map,
             center: POI_LATLNG[index],
-            radius: 1000,
+            radius: 1000*(index+1),
             editable: true,
             draggable: true,
+            suppressUndo: true,
         });
 
         google.maps.event.addListener(POI, 'radius_changed', function() {
@@ -154,7 +386,7 @@ function initMap() {
         min: 0,
         max: 24,
         range: true,
-        value: [0, 24]
+        value: [0, 24],
     });
 
 
@@ -219,7 +451,7 @@ function initMap() {
 
         // Add a circle.
         marker.append("circle")
-            .attr("r", 4.5)
+            .attr("r", 1.5)
             .attr("cx", padding)
             .attr("cy", padding);
     };
@@ -242,9 +474,9 @@ function initMap() {
 
     var showTime = function() {
         if ($('.switch input')[0].checked) {
-            $('.selected-time').text(time_range[1] + ' to ' + time_range[0] + '** wraps **');
+            $('.selected-time').text(time_range[1] + 'h to ' + time_range[0]+'h');
         } else {
-            $('.selected-time').text(time_range[0] + ' to ' + time_range[1]);
+            $('.selected-time').text(time_range[0] + 'h to ' + time_range[1]+'h');
         }
 
     };
@@ -305,8 +537,6 @@ function initMap() {
         // Bind our overlay to the map…
         overlay.setMap(map);
     });
-}
-
 
     // Bias the SearchBox results towards current map's viewport.
     map.addListener('bounds_changed', function() {
@@ -314,6 +544,10 @@ function initMap() {
             searchBoxes[index].setBounds(map.getBounds());
         }
     });
+}
+
+
+    
 
 // ------------ makes checkboxes animated and fancy
 $(document).ready(function() {

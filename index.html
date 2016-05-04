@@ -10,13 +10,14 @@
     <link rel='stylesheet' href='pickadate/themes/classic.time.css'>
     <link rel="stylesheet" href="bower_components/seiyria-bootstrap-slider/src/bootstrap-slider.css">
     <link rel="stylesheet" href="bower_components/seiyria-bootstrap-slider/src/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="map-icons-master/dist/css/map-icons.css">
 </head>
 
 <body>
     <div class="navbar-fixed">
         <nav>
             <div class="nav-wrapper">
-                <a href="#" class="brand-logo center">SF Crime</a>
+                <h1 class="brand-logo center">Dynamic Crime Finder - San Francisco</h1>
             </div>
         </nav>
     </div>
@@ -28,70 +29,87 @@
         <div class="col s3 fill">
             <!-- Grey navigation panel -->
             <form action="#">
+                <h3> Location Selectors </h3>
                 <p>
-                    <div>
+                    <div>       
+                        <span class="map-icon map-icon-circle" style="color: #75ABBC"></span>
                         <input id="pac-input1" class="controls searchbox" type="text" placeholder="Place 1">
                     </div>
                 </p>
                 <p>
                     <div>
+                        <span class="map-icon map-icon-circle" style="color: #6AABA2"></span>     
                         <input id="pac-input2" class="controls searchbox" type="text" placeholder="Place 2">
                     </div>
                 </p>
-                <div class="selected-time"> 0 to 24</div>
+                <h3> Time of Event Filter </h3>
+                <div class="center-align">
+                <div class="selected-time">0h to 24h</div>
                 <p>
                     <div id="time-slider"></div>
                 </p>
+
                 <!-- Switch -->
                 <div class="switch">
                     <label>
-                        Middle
+                        Contained
                         <input type="checkbox">
                         <span class="lever"></span> 
-                        Outside
+                        Wrapped
                     </label>
                 </div>
+                  </div>
 
 
+           <!--      <h3> Day of the Week </h3>
+                <a class="btn wide">Monday</a>
+                <a class="btn wide">Tuesday</a>
+                <a class="btn wide">Wednesday</a>
+                <a class="btn wide">Thursday</a>
+                <a class="btn wide">Friday</a>
+                <a class="btn wide">Saturday</a>
+                <a class="btn wide">Sunday</a>
+ -->
 
-                <p class='day-checkbox'>
+
+               <p class='day-checkbox'>
                     <div class='day-checkbox'>
-                        <input type="checkbox" id="Monday" />
+                        <input type="checkbox" id="Monday" checked/>
                         <label for="Monday"></label>
                     </div>
                     <div class="day-label">M</div>
                 </p>
                 <p class='day-checkbox'>
                     <div class='day-checkbox'>
-                        <input type="checkbox" id="Tuesday" />
+                        <input type="checkbox" id="Tuesday" checked/>
                         <label for="Tuesday"></label>
                     </div>
                     <div class="day-label">T</div>
                 </p>
                 <p class='day-checkbox'>
                     <div class='day-checkbox'>
-                        <input type="checkbox" id="Wednesday" />
+                        <input type="checkbox" id="Wednesday" checked/>
                         <label for="Wednesday"></label>
                     </div>
                     <div class="day-label">W</div>
                 </p>
                 <p class='day-checkbox'>
-                    <input type="checkbox" id="Thursday" />
+                    <input type="checkbox" id="Thursday" checked/>
                     <label for="Thursday"></label>
                     <div class="day-label">T</div>
                 </p>
                 <p class='day-checkbox'>
-                    <input type="checkbox" id="Friday" />
+                    <input type="checkbox" id="Friday" checked/>
                     <label for="Friday"></label>
                     <div class="day-label">F</div>
                 </p>
                 <p class='day-checkbox'>
-                    <input type="checkbox" id="Saturday" />
+                    <input type="checkbox" id="Saturday" checked/>
                     <label for="Saturday"></label>
                     <div class="day-label">S</div>
                 </p>
                 <p class='day-checkbox'>
-                    <input type="checkbox" id="Sunday" />
+                    <input type="checkbox" id="Sunday" checked/>
                     <label for="Sunday"></label>
                     <div class="day-label">S</div>
                 </p>
@@ -100,15 +118,15 @@
     </div>
     <script type='text/javascript' src='jquery-1.12.3.min.js'></script>
     <script type='text/javascript' src='materialize/js/materialize.js'></script>
-    <script type='text/javascript' src='pickadate/compressed/picker.js'></script>
-    <script type='text/javascript' src='pickadate/compressed/picker.time.js'></script>
+    <script type="text/javascript" src='wnumb-1.0.2/wNumb.js'></script>
+    <script type="text/javascript" src='bower_components/seiyria-bootstrap-slider/src/js/bootstrap-slider.js'>
+    </script>
     <script type="text/javascript" src="d3.v3.js"></script>
     <script type="text/javascript" src="SFMap.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-eM4xjHsVZ25wKuIG1PxCQkEs7WTMkeg&callback=initMap&libraries=places" async defer>
     </script>
-    <script type="text/javascript" src='wnumb-1.0.2/wNumb.js'></script>
-    <script type="text/javascript" src='bower_components/seiyria-bootstrap-slider/src/js/bootstrap-slider.js'>
-    </script>
+
+    
     <!-- <script type="text/javascript" src='nouislider.js'></script> -->
     <!-- <script type="text/javascript" src='slider.js'></script> -->
     <!-- <script type="text/javascript" src="noUiSlider.8.5.1/nouislider.js"></script> -->
