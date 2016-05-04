@@ -1,62 +1,310 @@
 // Create the Google Map…
 function initMap() {
 
+    var mapStyles = [
+    {
+        "featureType": "all",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "saturation": 36
+            },
+            {
+                "color": "#000000"
+            },
+            {
+                "lightness": 40
+            }
+        ]
+    },
+    {
+        "featureType": "all",
+        "elementType": "labels.text.stroke",
+        "stylers": [
+            {
+                "visibility": "on"
+            },
+            {
+                "color": "#000000"
+            },
+            {
+                "lightness": 16
+            }
+        ]
+    },
+    {
+        "featureType": "all",
+        "elementType": "labels.icon",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "administrative",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "color": "#000000"
+            },
+            {
+                "lightness": 20
+            }
+        ]
+    },
+    {
+        "featureType": "administrative",
+        "elementType": "geometry.stroke",
+        "stylers": [
+            {
+                "color": "#000000"
+            },
+            {
+                "lightness": 17
+            },
+            {
+                "weight": 1.2
+            }
+        ]
+    },
+    {
+        "featureType": "landscape",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#000000"
+            },
+            {
+                "lightness": 20
+            }
+        ]
+    },
+    {
+        "featureType": "landscape.man_made",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "lightness": "5"
+            }
+        ]
+    },
+    {
+        "featureType": "landscape.natural.landcover",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "lightness": "0"
+            }
+        ]
+    },
+    {
+        "featureType": "landscape.natural.landcover",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "lightness": "0"
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#000000"
+            },
+            {
+                "lightness": 21
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "lightness": "20"
+            },
+            {
+                "visibility": "on"
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "geometry.stroke",
+        "stylers": [
+            {
+                "lightness": "0"
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "lightness": "10"
+            }
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "color": "#000000"
+            },
+            {
+                "lightness": 17
+            }
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "elementType": "geometry.stroke",
+        "stylers": [
+            {
+                "color": "#000000"
+            },
+            {
+                "lightness": 29
+            },
+            {
+                "weight": 0.2
+            }
+        ]
+    },
+    {
+        "featureType": "road.arterial",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#000000"
+            },
+            {
+                "lightness": 18
+            }
+        ]
+    },
+    {
+        "featureType": "road.local",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#000000"
+            },
+            {
+                "lightness": 16
+            }
+        ]
+    },
+    {
+        "featureType": "transit",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#000000"
+            },
+            {
+                "lightness": 19
+            }
+        ]
+    },
+    {
+        "featureType": "water",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#000000"
+            },
+            {
+                "lightness": 17
+            }
+        ]
+    }
+];
+
+
+
     var overlay = new google.maps.OverlayView(),
         globalData,
         padding = 10,
         valid_days = [true, true, true, true, true, true, true],
         day_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-        pinColor1 = "#FF0000",
-        pinColor2 = "#28E3FC",
+        pinColor1 = "#75ABBC",
+        pinColor2 = "#6AABA2",
         POI_LATLNG = [{
-            lat: 37.76487,
-            lng: -122.41948
+            lat: 37.7650,
+            lng: -122.45
         }, {
             lat: 37.76000,
-            lng: -122.40
+            lng: -122.42
         }],
-        searchBoxes = [];
-
-
-
-    // ------ initializers ----------------
+        searchBoxes = [],
+        time_range = [0, 24],
+        CRIME_TYPES = ['OTHER OFFENSES', 'NON-CRIMINAL', 'ASSAULT', 'LARCENY/THEFT',
+       'WARRANTS', 'DISORDERLY CONDUCT', 'TRESPASS', 'SUSPICIOUS OCC',
+       'DRUG/NARCOTIC', 'VANDALISM', 'SEX OFFENSES, FORCIBLE', 'BURGLARY',
+       'VEHICLE THEFT', 'DRUNKENNESS', 'STOLEN PROPERTY', 'MISSING PERSON',
+       'ARSON', 'ROBBERY', 'WEAPON LAWS', 'FRAUD', 'KIDNAPPING',
+       'SEX OFFENSES, NON FORCIBLE', 'SECONDARY CODES', 'LIQUOR LAWS',
+       'LOITERING', 'FORGERY/COUNTERFEITING', 'EMBEZZLEMENT',
+       'DRIVING UNDER THE INFLUENCE', 'GAMBLING', 'EXTORTION', 'RUNAWAY',
+       'SUICIDE', 'BRIBERY', 'FAMILY OFFENSES', 'PROSTITUTION'],
+       NUM_CRIMES = 11322;
 
 
     //------------ initializing the map
     var map = new google.maps.Map(d3.select("#map").node(), {
-        zoom: 13,
+        zoom: 12,
         center: new google.maps.LatLng(37.76487, -122.41948),
-        mapTypeId: google.maps.MapTypeId.TERRAIN
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        zoomControlOptions: {
+            position: google.maps.ControlPosition.LEFT_TOP,
+        },
+        streetViewControl: false,
     });
 
+    map.setOptions({styles: mapStyles});
+
+    // var setRadius() = function(id, radius) {
+    //     //$(id).text("")
+    // };
 
 
     // -------------- creating POI ------------
     var createPOI = function(color, index) {
+        var ids = ["#radius1", "#radius2"];
         var POI = new google.maps.Circle({
             strokeColor: color,
             strokeOpacity: 0.8,
-            strokeWeight: 0.5,
+            strokeWeight: 1,
             fillColor: color,
-            fillOpacity: 0.35,
+            fillOpacity: 0.05,
             map: map,
             center: POI_LATLNG[index],
-            radius: 1000,
+            radius: 1000*(index+1),
             editable: true,
             draggable: true,
+            suppressUndo: true,
         });
 
         google.maps.event.addListener(POI, 'radius_changed', function() {
-            d3.select('.incidents').selectAll("svg")
-                .data(d3.entries(globalData['data']))
-                .each(macDaddyFilter); // update existing markers
+            // d3.select('.incidents').selectAll("svg")
+            //     .data(d3.entries(globalData['data']))
+            //     .each(macDaddyFilter); // update existing markers
+            $(ids[index]).text((POI.getRadius()/1000.0).toFixed(2));
+            applyFilters();
 
         });
 
         google.maps.event.addListener(POI, 'dragend', function() {
-            d3.select('.incidents').selectAll("svg")
-                .data(d3.entries(globalData['data']))
-                .each(macDaddyFilter); // update existing markers
+            // d3.select('.incidents').selectAll("svg")
+            //     .data(d3.entries(globalData['data']))
+            //     .each(macDaddyFilter); // update existing markers
+            applyFilters();
 
         });
 
@@ -100,9 +348,10 @@ function initMap() {
 
                 if (places.length == 1) {
                     POI.setCenter(places[0].geometry.location);
-                    d3.select('.incidents').selectAll("svg")
-                        .data(d3.entries(globalData['data']))
-                        .each(macDaddyFilter); // update existing markers 
+                    applyFilters();
+                    // d3.select('.incidents').selectAll("svg")
+                    //     .data(d3.entries(globalData['data']))
+                    //     .each(macDaddyFilter); // update existing markers 
                 } else {
                     places.forEach(function(place) {
                         var icon = {
@@ -123,9 +372,7 @@ function initMap() {
 
                         marker.addListener('click', function() {
                             POI.setCenter(place.geometry.location);
-                            d3.select('.incidents').selectAll("svg")
-                                .data(d3.entries(globalData['data']))
-                                .each(macDaddyFilter); // update existing markers 
+                            applyFilters();
                             markers.forEach(function(old_marker) {
                                 old_marker.setMap(null);
                             });
@@ -151,29 +398,32 @@ function initMap() {
     createSearchBoxes();
 
 
-    // Bias the SearchBox results towards current map's viewport.
-    map.addListener('bounds_changed', function() {
-        for (index in searchBoxes) {
-            searchBoxes[index].setBounds(map.getBounds());
-        }
+  // // --------- creating time slider -----------
+    var slider = new Slider("#time-slider", {
+        id: "slider12c",
+        min: 0,
+        max: 24,
+        range: true,
+        value: [0, 24],
     });
 
 
 
 
 
-// ------ FILTER FUNCTIONALITY ----------
+    // ------ FILTER FUNCTIONALITY ----------
 
     var filterIntersection = function(d) {
-            var _dLatLng = new google.maps.LatLng(d.value.Location[1], d.value.Location[0]);
-            var distToPOI1 = google.maps.geometry.spherical.computeDistanceBetween(POI1.center, _dLatLng);
-            var distToPOI2 = google.maps.geometry.spherical.computeDistanceBetween(POI2.center, _dLatLng);
-            if (distToPOI1 < POI1.radius && distToPOI2 < POI2.radius) {
-                return true;
-            } else {
-                return false;
-            }
+
+        var _dLatLng = new google.maps.LatLng(d.value.Location[1], d.value.Location[0]);
+        var distToPOI1 = google.maps.geometry.spherical.computeDistanceBetween(POI1.center, _dLatLng);
+        var distToPOI2 = google.maps.geometry.spherical.computeDistanceBetween(POI2.center, _dLatLng);
+        if (distToPOI1 < POI1.radius && distToPOI2 < POI2.radius) {
+            return true;
+        } else {
+            return false;
         }
+    }
 
     var filterDays = function(d) {
         var index = day_names.indexOf(d.value.DayOfWeek),
@@ -185,16 +435,39 @@ function initMap() {
         }
     };
 
-     var macDaddyFilter = function(d) {
-      if (filterIntersection(d) && filterDays(d)) {
-        d3.select(this).style('visibility', 'visible');
-      } else {
-        d3.select(this).style('visibility', 'hidden');
-      }
+    var filterTime = function(d) {
+        var hour = parseInt(d.value.Time.split(":")[0]);
+        if (hour == time_range[0] || hour == time_range[1]) {return true};
+
+        if (hour > time_range[0] && hour < time_range[1]) {
+            return $('.switch input')[0].checked ? false : true;
+        } else {
+            return $('.switch input')[0].checked ? true : false;
+        }
+
+    };
+
+    var filterCrimeType = function(d) {
+        var category = d.value.Category;
+        if (CRIME_TYPES.indexOf(category) != -1) {
+            return true;
+        }
+        return false;
     };
 
 
-        //--------------- painting the crime sites
+    var macDaddyFilter = function(d) {
+        if (filterIntersection(d) && filterDays(d) && filterTime(d) && filterCrimeType(d)) {
+            d3.select(this).style('visibility', 'visible');
+            NUM_CRIMES++;
+            // console.log(d)
+        } else {
+            d3.select(this).style('visibility', 'hidden');
+        }
+    };
+
+
+    //--------------- painting the crime sites
     var updateMarkers = function(data) {
 
         var marker = d3.select('.incidents').selectAll("svg")
@@ -206,7 +479,7 @@ function initMap() {
 
         // Add a circle.
         marker.append("circle")
-            .attr("r", 4.5)
+            .attr("r", 1.5)
             .attr("cx", padding)
             .attr("cy", padding);
     };
@@ -220,25 +493,86 @@ function initMap() {
     };
 
 
+    var applyFilters = function() {
+        NUM_CRIMES = 0;
+        d3.select('.incidents').selectAll("svg")
+            .data(d3.entries(globalData['data']))
+            .each(macDaddyFilter); // update existing markers
+        showTotal();
+    };
+
+    var showTotal = function () {
+        $('#total').text("Crimes Matched: "+NUM_CRIMES);  
+    };
+
+
+    var showTime = function() {
+        if ($('.switch input')[0].checked) {
+            $('.selected-time').text(time_range[1] + 'h to ' + time_range[0]+'h');
+        } else {
+            $('.selected-time').text(time_range[0] + 'h to ' + time_range[1]+'h');
+        }
+
+    };
 
     //------------- day checkbox functionality
 
 
     $("input[type='checkbox']").change(function() {
-
         $("input[type='checkbox']").each(function(index, element) {
             valid_days[index] = element.checked;
-            // console.log(element.id)
-            // console.log(element.checked)
         });
-
-        d3.select('.incidents').selectAll("svg")
-            .data(d3.entries(globalData['data']))
-            .each(macDaddyFilter); // update existing markers
+        applyFilters();
     });
 
 
+    $('.switch input').change(function() {
+        if (this.checked) {
+            $('.slider-track-high').addClass('flipped');
+            $('.slider-track-low').addClass('flipped');
+            $('.slider-selection').addClass('flipped');
+        } else {
+            $('.slider-track-high').removeClass('flipped');
+            $('.slider-track-low').removeClass('flipped');
+            $('.slider-selection').removeClass('flipped');
+        }
+        showTime();
+    })
 
+    $("#time-slider").on("slideStop", function(slideEvt) {
+        //console.log(slideEvt);
+        time_range = slideEvt.value;
+        applyFilters();
+        showTime();
+    });
+
+    // ------ initializing the crime type selection
+
+    $('#crime-type').children().each(function(i) {
+        $(this).click("click",function(e) {
+            var toggledOn = $(this).hasClass("inactive");
+            if (toggledOn) {
+                CRIME_TYPES.push($(this).text());
+                $(this).removeClass("inactive");
+            } else {
+                var index = CRIME_TYPES.indexOf($(this).text());
+                if (index > -1) {
+                    CRIME_TYPES.splice(index, 1);
+                }
+                $(this).addClass("inactive");
+            }
+            applyFilters();
+        });
+    });
+
+
+    $('#clear').click(function() {
+        $('#crime-type').children().each(function(i) {
+            $(this).addClass("inactive");
+        });
+        CRIME_TYPES = [];
+        applyFilters();
+    });
 
 
     // lat, long, radius
@@ -264,12 +598,18 @@ function initMap() {
         // Bind our overlay to the map…
         overlay.setMap(map);
     });
+
+    // Bias the SearchBox results towards current map's viewport.
+    map.addListener('bounds_changed', function() {
+        for (index in searchBoxes) {
+            searchBoxes[index].setBounds(map.getBounds());
+        }
+    });
 }
-
-
 
 
 // ------------ makes checkboxes animated and fancy
 $(document).ready(function() {
     $('input#input_text, textarea#textarea1').characterCounter();
+
 });
