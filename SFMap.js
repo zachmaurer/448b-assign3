@@ -243,7 +243,16 @@ function initMap() {
             lng: -122.42
         }],
         searchBoxes = [],
-        time_range = [0, 24];
+        time_range = [0, 24],
+        CRIME_TYPES = ['OTHER OFFENSES', 'NON-CRIMINAL', 'ASSAULT', 'LARCENY/THEFT',
+       'WARRANTS', 'DISORDERLY CONDUCT', 'TRESPASS', 'SUSPICIOUS OCC',
+       'DRUG/NARCOTIC', 'VANDALISM', 'SEX OFFENSES, FORCIBLE', 'BURGLARY',
+       'VEHICLE THEFT', 'DRUNKENNESS', 'STOLEN PROPERTY', 'MISSING PERSON',
+       'ARSON', 'ROBBERY', 'WEAPON LAWS', 'FRAUD', 'KIDNAPPING',
+       'SEX OFFENSES, NON FORCIBLE', 'SECONDARY CODES', 'LIQUOR LAWS',
+       'LOITERING', 'FORGERY/COUNTERFEITING', 'EMBEZZLEMENT',
+       'DRIVING UNDER THE INFLUENCE', 'GAMBLING', 'EXTORTION', 'RUNAWAY',
+       'SUICIDE', 'BRIBERY', 'FAMILY OFFENSES', 'PROSTITUTION'];
 
 
     //------------ initializing the map
@@ -429,9 +438,17 @@ function initMap() {
 
     };
 
+    var filterCrimeType = function(d) {
+        var category = d.value.Category;
+        if (CRIME_TYPES.indexOf(category) != -1) {
+            return true;
+        }
+        return false;
+    };
+
 
     var macDaddyFilter = function(d) {
-        if (filterIntersection(d) && filterDays(d) && filterTime(d)) {
+        if (filterIntersection(d) && filterDays(d) && filterTime(d) && filterCrimeType(d)) {
             d3.select(this).style('visibility', 'visible');
             // console.log(d)
         } else {
@@ -515,6 +532,26 @@ function initMap() {
         showTime();
     });
 
+    // ------ initializing the crime type selection
+
+    $('#crime-type').children().each(function(i) {
+        $(this).click("click",function(e) {
+            var toggledOn = $(this).hasClass("inactive");
+            if (toggledOn) {
+                CRIME_TYPES.push($(this).text());
+                $(this).removeClass("inactive");
+            } else {
+                var index = CRIME_TYPES.indexOf($(this).text());
+                if (index > -1) {
+                    CRIME_TYPES.splice(index, 1);
+                }
+                $(this).addClass("inactive");
+            }
+            applyFilters();
+        });
+    });
+
+
 
     // lat, long, radius
     // var poi = [[null, null, null], [null, null, null]];
@@ -549,9 +586,15 @@ function initMap() {
 }
 
 
-    
+var clearSelection = function() {
+    $('#crime-type').children().each(function(i) {
+        $(this).addClass("inactive");
+    });
+    CRIME_TYPES = [];
+};
 
 // ------------ makes checkboxes animated and fancy
 $(document).ready(function() {
     $('input#input_text, textarea#textarea1').characterCounter();
+
 });

@@ -12,6 +12,8 @@ body,
     position: absolute;
 }
 
+
+
 .wide {
     width: 80%;
 }
@@ -44,6 +46,8 @@ body,
 .day-checkbox {
     display: inline;
     width: 50px;
+    float: left;
+    margin-right: 5px;
 }
 
 .controls {
@@ -92,6 +96,20 @@ body,
     width: 345px;
 }
 
+.tall {
+    height: 300px;
+    max-width: 100%;
+    overflow: scroll;
+}
+
+.wide {
+    width: 90%;
+}
+
+.inactive {
+    background-color: grey;
+    opacity: 0.4;
+}
 
 /* SLIDER Classes*/
 
