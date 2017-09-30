@@ -1,4 +1,4 @@
-## SF Crime Viz
+# SF Crime Viz
 
 Objectives:
 
